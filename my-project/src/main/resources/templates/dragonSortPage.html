@@ -122,24 +122,13 @@
         </section>
     </section>
 
-<!--    <section class="column-selector" style="text-align: center; margin-top: 10px;">-->
-<!--                <span th:each="col : ${#numbers.sequence(0, columnCount - 1)}">-->
-<!--                    <a th:href="@{/dragonSort/level(level=${currentLevel}, col=${col})}" class="column-link">-->
-<!--                        <span th:text="${col + 1}"></span>-->
-<!--                    </a>&nbsp;&nbsp;-->
-<!--                </span>-->
-<!--    </section>-->
+    <section class="column-selector" style="text-align: center; margin-top: 10px;">
+                <span th:each="col : ${#numbers.sequence(0, columnCount - 1)}">
+                    <a th:href="@{/dragonSort/level(level=${currentLevel}, col=${col})}" class="column-link">
+                        <span th:text="${col + 1}"></span>
+                    </a>&nbsp;&nbsp;
+                </span>
+    </section>
 
-<!--<div th:replace="fragments/footer.html :: footer"></div>-->
-
-<!--<div th:fragment="footer">-->
-<!--    <footer>-->
-<!--        <div class="footer">-->
-<!--            <div class="center">-->
-<!--                <span class="title">Anastasiia Borodina</span>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </footer>-->
-<!--</div>-->
 </body>
 </html>
