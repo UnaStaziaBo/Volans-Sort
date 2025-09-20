@@ -95,6 +95,7 @@ public class Field {
         }
 
         System.out.println("\nInvalid move! Destination column is full.");
+        field[sourceRow][fromCol] = movingDragon;
         return false;
     }
 

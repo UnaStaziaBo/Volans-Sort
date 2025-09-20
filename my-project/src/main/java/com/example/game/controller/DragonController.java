@@ -24,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.*;
 
 @Controller
-@RequestMapping("dragonSort")
+@RequestMapping("/dragonSort")
 @Scope(WebApplicationContext.SCOPE_SESSION)
 public class DragonController {
 
@@ -47,11 +47,11 @@ public class DragonController {
     private RatingService ratingService;
 
     public DragonController(ScoreService scoreService, CommentService commentService) {
-        levels.add(new GenericLevel(1, 5, 7, 50, Arrays.asList(new DragonA()), new TextRule("rules/level1.txt")));
-        levels.add(new GenericLevel(2, 5, 7, 50, Arrays.asList(new DragonB()), new TextRule("rules/level2.txt")));
-        levels.add(new GenericLevel(3, 5, 7, 50, Arrays.asList(new DragonC()), new TextRule("rules/level3.txt")));
-        levels.add(new GenericLevel(4, 5, 7, 50, Arrays.asList(new DragonD()), new TextRule("rules/level4.txt")));
-        levels.add(new GenericLevel(5, 5, 8, 60, Arrays.asList(new DragonE()), new TextRule("rules/level5.txt")));
+        levels.add(new GenericLevel(1, 5, 7, 100, Arrays.asList(new DragonA()), new TextRule("rules/level1.txt")));
+        levels.add(new GenericLevel(2, 5, 7, 100, Arrays.asList(new DragonB()), new TextRule("rules/level2.txt")));
+        levels.add(new GenericLevel(3, 5, 7, 100, Arrays.asList(new DragonC()), new TextRule("rules/level3.txt")));
+        levels.add(new GenericLevel(4, 5, 7, 100, Arrays.asList(new DragonD()), new TextRule("rules/level4.txt")));
+        levels.add(new GenericLevel(5, 5, 8, 120, Arrays.asList(new DragonE()), new TextRule("rules/level5.txt")));
         this.scoreService = scoreService;
         this.commentService = commentService;
     }
@@ -78,7 +78,7 @@ public class DragonController {
         model.addAttribute("rule", getRulesText());
         model.addAttribute("maxMoves", level.getMaxMoves());
         model.addAttribute("moves", moves);
-        return "dragonSort";
+        return "dragonSortPage";
     }
 
     @RequestMapping("/new")
@@ -113,7 +113,7 @@ public class DragonController {
         model.addAttribute("rule", getRulesText());
         model.addAttribute("maxMoves", level.getMaxMoves());
         model.addAttribute("moves", moves);
-        return "dragonSort";
+        return "dragonSortPage";
     }
 
     @RequestMapping("/comment")
@@ -175,7 +175,7 @@ public class DragonController {
         model.addAttribute("rating", ratingService.getAverageRating("dragonSort") );
         model.addAttribute("totalScore", totalScore);
 
-        return "dragonSort";
+        return "dragonSortPage";
     }
 
     @RequestMapping("/dragon")
@@ -202,7 +202,7 @@ public class DragonController {
         model.addAttribute("comments", commentService.getComments("dragonSort"));
         model.addAttribute("rating", ratingService.getAverageRating("dragonSort"));
         model.addAttribute("totalScore", totalScore);
-        return "dragonSort";
+        return "dragonSortPage";
     }
 
     @RequestMapping("/level")
@@ -224,7 +224,7 @@ public class DragonController {
             moveSuccess = level.getField().moveDragon(initialCol, chosenCol);
             initialCol = null;
         }
-
+        this.moves++;
         if (moveSuccess) { //Game process
             String afterMoveState = level.getField().toString();
 
@@ -235,7 +235,7 @@ public class DragonController {
                 System.out.println("\nDragon activated!");
 //                getHtmlField(level.getField(), currentLevelIndex);
             }
-            this.moves++;
+//            this.moves++;
             score = 10;
 
             //bonus score for completed column
@@ -294,7 +294,7 @@ public class DragonController {
         model.addAttribute("scores", scoreService.getTopScores("dragonSort"));
         model.addAttribute("comments", commentService.getComments("dragonSort"));
         model.addAttribute("rating", ratingService.getAverageRating("dragonSort"));
-        return "dragonSort";
+        return "dragonSortPage";
     }
 
     private String getRulesText() {
@@ -319,15 +319,15 @@ public class DragonController {
     private GameLevel generateLevelByIndex(int index) {
         switch (index) {
             case 0:
-                return new GenericLevel(1, 5, 7, 50, Arrays.asList(new DragonA()), new TextRule("rules/level1.txt"));
+                return new GenericLevel(1, 5, 7, 100, Arrays.asList(new DragonA()), new TextRule("rules/level1.txt"));
             case 1:
-                return new GenericLevel(2, 5, 7, 50, Arrays.asList(new DragonB()), new TextRule("rules/level2.txt"));
+                return new GenericLevel(2, 5, 7, 100, Arrays.asList(new DragonB()), new TextRule("rules/level2.txt"));
             case 2:
-                return new GenericLevel(3, 5, 7, 50, Arrays.asList(new DragonC()), new TextRule("rules/level3.txt"));
+                return new GenericLevel(3, 5, 7, 100, Arrays.asList(new DragonC()), new TextRule("rules/level3.txt"));
             case 3:
-                return new GenericLevel(4, 5, 7, 50, Arrays.asList(new DragonD()), new TextRule("rules/level4.txt"));
+                return new GenericLevel(4, 5, 7, 100, Arrays.asList(new DragonD()), new TextRule("rules/level4.txt"));
             case 4:
-                return new GenericLevel(5, 5, 8, 60, Arrays.asList(new DragonE()), new TextRule("rules/level5.txt"));
+                return new GenericLevel(5, 5, 8, 120, Arrays.asList(new DragonE()), new TextRule("rules/level5.txt"));
             default:
                 throw new IllegalArgumentException("Invalid level index: " + index);
         }

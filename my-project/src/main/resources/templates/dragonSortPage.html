@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      style="background-image: url('/images/background.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>dragonSort</title>
+    <link rel="stylesheet" href="/css/stylesheet.css"/>
+</head>
+
+<script>
+    let currentCol = 0;
+    const totalCol = parseInt('[[${columnCount}]]');
+    const level = parseInt('[[${currentLevel}]]');
+
+    function updateCol(){
+        document.querySelectorAll('.cell').forEach((cell) => {
+            const col = parseInt(cell.getAttribute('data-col'));
+
+            if (col === currentCol) {
+                cell.classList.add('current-column');
+           } else {
+                cell.classList.remove('current-column');
+           }
+        });
+    }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowRight' && currentCol < totalCol - 1) {
+            currentCol++;
+            updateCol();
+        } else  if (event.key === 'ArrowLeft' && currentCol > 0) {
+            currentCol--;
+            updateCol();
+        } else if (event.key === ' ') {
+            event.preventDefault();
+
+            fetch(`/dragonSort/level?level=${level}&col=${currentCol}`)
+                .then(response => response.text())
+                .then(html => {
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    document.body.innerHTML = doc.body.innerHTML;
+
+                    updateCol();
+                })
+                .catch(err => console.error('Error:', err));
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', updateCol);
+</script>
+
+<body>
+<div class="top">
+    <div class="left">
+        <span class="title">Dragon Sort</span>
+    </div>
+    <div class="center">
+        <a href="/dragonSort/skip">Skip Level</a>
+        <a href="/dragonSort/dragon">Dragon</a>
+        <a href="/dragonSort/new">New Game</a>
+    </div>
+    <div class="right">
+        <a href="/register" class="buttonRegister">Sign in</a>
+        <a href="/logout">Logout</a><br/>
+        <span th:if="${@userController.logged}">
+            Logged as <span th:text="${@userController.loggedUser.login}"></span><br/>
+        </span>
+    </div>
+</div>
+
+
+<!--    <p>Field state: <span th:text="${fieldState}"></span></p>-->
+    <div class="info">
+        <div class="levelCount">
+            <p>Current level: <span th:text="${currentLevel + 1}"></span></p>
+        </div>
+
+<!--        <div class="maxMoves">-->
+<!--            <p>Max Moves: <span th:text="${maxMoves}"></span></p>-->
+<!--        </div>-->
+
+
+        <div class="rules" th:if="${moves == 0}" th:text="${rule}"></div>
+
+        <div class="points" th:if="${moves > 0}">
+            <p>Points: <span th:text="${totalScore}"></span></p>
+        </div>
+
+        <div class="movesCount">
+            <p>
+                Your moves: <span th:text="${moves}"></span> | <span th:text="${maxMoves}"></span>
+            </p>
+        </div>
+    </div>
+
+
+    <section class="game-container">
+        <section class="game-grid">
+            <section th:each="row : ${#numbers.sequence(0, rowCount - 1)}" class="row">
+                <section th:each="col : ${#numbers.sequence(0, columnCount - 1)}"
+                     th:attr="data-col=${col}"
+                     th:class="'cell ' + (${col == 0 || col == columnCount - 1} ? 'wall' : '')">
+
+                    <section th:switch="${board[row][col]?.toString()}">
+                        <div th:case="'A'" class="redDragon"></div>
+                        <div th:case="'B'" class="blueDragon"></div>
+                        <div th:case="'C'" class="yellowDragon"></div>
+                        <div th:case="'D'" class="purpleDragon"></div>
+                        <div th:case="'E'" class="pinkDragon"></div>
+                        <div th:case="'F'" class="yummy"></div>
+                        <span th:case="*"
+                              th:text="${board[row][col]}"
+                              class="cell-content"></span>
+                    </section>
+
+                </section>
+            </section>
+        </section>
+    </section>
+
+<!--    <section class="column-selector" style="text-align: center; margin-top: 10px;">-->
+<!--                <span th:each="col : ${#numbers.sequence(0, columnCount - 1)}">-->
+<!--                    <a th:href="@{/dragonSort/level(level=${currentLevel}, col=${col})}" class="column-link">-->
+<!--                        <span th:text="${col + 1}"></span>-->
+<!--                    </a>&nbsp;&nbsp;-->
+<!--                </span>-->
+<!--    </section>-->
+
+<!--<div th:replace="fragments/footer.html :: footer"></div>-->
+
+<!--<div th:fragment="footer">-->
+<!--    <footer>-->
+<!--        <div class="footer">-->
+<!--            <div class="center">-->
+<!--                <span class="title">Anastasiia Borodina</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </footer>-->
+<!--</div>-->
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gamestudio</title>
+    <link rel="stylesheet" href="/css/stylesheet.css"/>
+</head>
+<body>
+    <div class="form">
+        <p>You don't have an account? Sign up</p>
+        <form action="/register" method="post">
+            Login:<input type="text" name="login"><br/>
+            Password:<input type="password" name="password"><br/>
+            <input type="submit" value="Register"/>
+        </form>
+
+        <div th:if="${sorryMessage}">
+            <p th:text="${sorryMessage}"></p>
+        </div>
+
+
+        <span th:if="not ${@userController.logged}">
+            Please login to leave a comment and rate DragonSort!<br/>
+            <form action="/login" method="post">
+                Login:<input type="text" name="login"><br/>
+                Password:<input type="password" name="password"><br/>
+                <input type="submit" value="Login"/>
+            </form>
+        </span>
+
+        <div class="commentButton">
+            <a href="/dragonSort/finalPage">Comments</a>
+        </div>
+        <div class="gameButton">
+            <a href="/dragonSort">DragonSort</a>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gamestudio</title>
+    <link rel="stylesheet" href="/css/stylesheet.css"/>
+</head>
+<body>
+<div class="final">
+    <p>Congratulations! It's your total score: <span th:text="${totalScore}"></span></p>
+    <p>Do you want to show up in the rankings and leave comments? Sign in</p>
+    <a href="/register" class="buttonRegister">Sign in</a>
+    <a href="/dragonSort/new">New Game</a>
+
+    <ol>
+        <li th:each="score: ${scores}">
+            <span th:text="${score.player}"></span>
+            <span th:text="${score.points}"></span>
+        </li>
+    </ol>
+
+    <p>Dragon Sort average rating</p>
+    <span th:text="${rating}"></span>
+
+    <p>Dragon Sort comments: </p>
+
+    <ol>
+        <li th:each="comment: ${comments}">
+            <!--            <span th:text="${comment.player}"></span>-->
+            <span th:text="${comment.comment}"></span>
+        </li>
+    </ol>
+
+
+
+    <div th:if="${@userController.logged}">
+            <span>
+                <form action="/dragonSort/comment" method = "post">
+                    <label>Please, add your comment</label><br/>
+                    <textarea name = "comment" rows = "3" cols= "40"></textarea><br/>
+                    <input type="submit" value="Submit Comment">
+                </form>
+            </span>
+    </div>
+        <div th:if="${@userController.logged}">
+            <span>
+                <form action="/dragonSort/rating" method = "post">
+                    <label>Please, add your rating</label><br/>
+                    <select name="rating" id="rating">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <input type="submit" value="Submit Rating"/>
+                </form>
+            </span>
+        </div>
+</div>
+</body>
+</html>
