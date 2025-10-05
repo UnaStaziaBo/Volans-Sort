@@ -1,0 +1,14 @@
+Then you're just in time. All the dragons are mixed up.
+And you need to bring the families together.
+
+    1. Pick a column to pick up the top dragon
+    2. Pick another column if it matches or the column is empty.
+    3. Only one dragon can be moved at a time.
+    4. A column must have space for the dragon to be placed.
+    5. Sort all dragon by sight to win!
+
+Traitors are all around us but don't worry, here's a clue:
+    A dark dragon flew so high,
+    With fire burning in the sky.
+    It roared, it fought, it made them run,
+    Red dragon mixes up families just for fun.
