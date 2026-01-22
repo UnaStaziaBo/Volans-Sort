@@ -80,7 +80,7 @@ This repository contains two implementations of the same game:
    4. shared core logic
 
 ## Play the Game
-* itch.io:
+* itch.io: https://unastaziabo.itch.io/volans-sort-puzzle-game
 * Google Play: (planned)
 
 ## License

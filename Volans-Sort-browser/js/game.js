@@ -658,6 +658,23 @@ function showFinalPointsToast(points, ms = 3000) {
         }, ms);
     });
 }
+
+function fitBoardToViewport() {
+    const container = document.querySelector(".game-container");
+    const grid = document.querySelector(".game-grid");
+    if (!container || !grid) return;
+
+    grid.style.transform = "scale(1)";
+
+    const padding = 16;
+    const available = container.clientWidth - padding;
+    const needed = grid.scrollWidth;
+
+    const k = Math.min(1.15, available / needed);
+
+    grid.style.transform = `scale(${k})`;
+}
+
 // ===============================================================
 
 rulesOverlay.addEventListener("click", async () => {
@@ -677,7 +694,13 @@ rulesOverlay.addEventListener("click", async () => {
     startAfterRules();
 });
 
+const _renderHUD = renderHUD;
+renderHUD = function () {
+    _renderHUD();
+    requestAnimationFrame(fitBoardToViewport);
+};
 
+window.addEventListener("resize", () => requestAnimationFrame(fitBoardToViewport));
 window.showLosePopup = showLosePopup;
 window.newGame = newGame;
 window.showDragonPopup = showDragonPopup;

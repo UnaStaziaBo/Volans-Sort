@@ -8,6 +8,7 @@ html, body {
     margin: 0;
     padding: 0;
 }
+.top, .info { flex: 0 0 auto; }
 
 body {
     background-image: url('../resources/images/backgrounds/background.png');
@@ -15,6 +16,8 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 body.bg-intro-1, body.bg-finish-base {
@@ -407,17 +410,18 @@ body.awaiting-rules .rules-overlay{ display: flex; }
     }
 }
 
-.game-container {
+.game-container{
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 10vh;
-    padding: 0 12px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+    align-items: flex-start;
+    padding: 16px 12px;
 
+    overflow: hidden;
+}
 .game-grid {
+    transform-origin: top center;
     display: inline-block;
     border-radius: 8px;
     padding: 10px;
@@ -492,11 +496,23 @@ body.awaiting-rules .rules-overlay{ display: flex; }
 
 .blueDragon {
     width: 100px;
-    height: 64px;
-    background-image: url('../resources/images/dragons/blueDragon.png');
+    height: 75px;
     background-repeat: no-repeat;
-    animation: flapWings 1s steps(3) infinite;
-    background-size: 320px 64px;
+    background-position: center center;
+    background-size: 83% auto;
+
+    background-image: url('../resources/images/dragons/blueDragon1.png');
+    animation-name: blueFrames, floatDragon;
+    animation-duration: 1.2s, 1.8s;
+    animation-timing-function: steps(3), ease-in-out;
+    animation-iteration-count: infinite, infinite;
+}
+
+@keyframes blueFrames {
+    0%   { background-image: url('../resources/images/dragons/blueDragon1.png'); }
+    33%  { background-image: url('../resources/images/dragons/blueDragon2.png'); }
+    66%  { background-image: url('../resources/images/dragons/blueDragon3.png'); }
+    100% { background-image: url('../resources/images/dragons/blueDragon1.png'); }
 }
 
 .yellowDragon {
@@ -543,20 +559,25 @@ body.awaiting-rules .rules-overlay{ display: flex; }
 
 .pinkDragon {
     width: 100px;
-    height: 64px;
-    background-image: url('../resources/images/dragons/pinkDragon.png');
+    height: 85px;
     background-repeat: no-repeat;
-    animation: flapWings 1s steps(3) infinite;
-    background-size: 320px 64px;
-}
+    background-position: center center;
+    background-size: 60% auto;
 
-.blueDragon, .pinkDragon {
-    will-change: transform;
-    animation-name: flapWings, floatDragon;
-    animation-duration: 1s, 1.8s;
+    background-image: url('../resources/images/dragons/pinkDragon1.png');
+    animation-name: pinkFrames, floatDragon;
+    animation-duration: 1.2s, 1.8s;
     animation-timing-function: steps(3), ease-in-out;
     animation-iteration-count: infinite, infinite;
 }
+
+@keyframes pinkFrames {
+    0%   { background-image: url('../resources/images/dragons/pinkDragon1.png'); }
+    33%  { background-image: url('../resources/images/dragons/pinkDragon2.png'); }
+    66%  { background-image: url('../resources/images/dragons/pinkDragon3.png'); }
+    100% { background-image: url('../resources/images/dragons/pinkDragon1.png'); }
+}
+
 
 @keyframes floatDragon {
     0%   { transform: translateY(0); }
@@ -1087,3 +1108,51 @@ body.awaiting-rules .rules-overlay{ display: flex; }
     .yummy { background-size: 44px 58px !important; }
 }
 
+@media (max-height: 650px) {
+    .info {
+        margin: 6px auto !important;
+        gap: 8px !important;
+    }
+
+    .levelCount, .movesCount, .points {
+        margin: 6px auto !important;
+        padding: 6px 10px !important;
+        animation: none !important;
+    }
+
+    .game-container {
+        min-height: 0 !important;
+        padding: 6px 10px !important;
+        align-items: flex-start !important;
+    }
+
+    .game-grid {
+        padding: 6px !important;
+    }
+}
+
+@media (max-height: 700px), (max-width: 980px) {
+
+    .info { margin: 4px auto !important; }
+    .levelCount, .movesCount, .points { margin: 4px auto !important; padding: 6px 10px !important; }
+
+    .cell{
+        width: 80px !important;
+        height: 68px !important;
+        font-size: 14px !important;
+    }
+
+    .redDragon, .blueDragon, .yellowDragon, .purpleDragon, .pinkDragon{
+        width: 64px !important;
+        height: 48px !important;
+        background-size: auto 48px !important;
+    }
+
+    .yummy{
+        width: 28px !important;
+        height: 38px !important;
+        background-size: 28px 38px !important;
+    }
+
+    .game-grid{ padding: 6px !important; }
+}
