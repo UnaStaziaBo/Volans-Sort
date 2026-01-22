@@ -1,19 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" style="background-image: url('resources/images/backgrounds/background.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Dragon Sort</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
+
 <body>
-<div class="top">
-  <span class="title">Dragon Sort</span>
-  <div class="score">Score: <span id="score">0</span></div>
+
+<div class="rotate-overlay" id="rotateOverlay">
+  <div class="rotate-card">
+    <div class="rotate-title">Flip your phone</div>
+    <div class="rotate-text">Use horizontal screen</div>
+  </div>
 </div>
 
-<div id="game-container"></div>
+<div class="top">
+  <div class="left">
+    <span class="title">Volans Sort © 2026 UnaStaziaBo</span>
+  </div>
 
+  <div class="center">
+    <button id="btn-skip" class="top-link">Skip Level</button>
+    <button id="btn-dragon" class="top-link">Dragon</button>
+    <button id="btn-new" class="top-link">New Game</button>
+  </div>
+
+</div>
+
+<div class="info">
+  <div class="levelCount">
+    <p>Current level: <span id="currentLevel">1</span></p>
+  </div>
+
+  <!-- Rules shown only when moves==0 -->
+  <div class="rules" id="rulesBox"></div>
+
+  <!-- Points shown only when moves>0 -->
+  <div class="points" id="pointsBox" style="display:none;">
+    <p>Points: <span id="score">0</span></p>
+  </div>
+
+  <div class="movesCount">
+    <p>Your moves: <span id="moves">0</span> | <span id="maxMoves">100</span></p>
+  </div>
+</div>
+
+<section class="game-container">
+  <section class="game-grid" id="game-container"></section>
+</section>
+
+<!-- Scripts -->
+<script src="js/Dragons.js"></script>
 <script src="js/Field.js"></script>
 <script src="js/game.js"></script>
 </body>

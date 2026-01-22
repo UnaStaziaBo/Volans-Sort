@@ -1,0 +1,7 @@
+    1. Pick a column to pick up the top dragon
+    2. Pick another column if it matches or the column is empty.
+    3. Only one dragon can be moved at a time.
+    4. A column must have space for the dragon to be placed.
+    5. Sort all dragon by sight to win!
+
+Solve the secrets hidden in the poetry. The fate of the dragons depends on your results, so collect as many points as possible.
