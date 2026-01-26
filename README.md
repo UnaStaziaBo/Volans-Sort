@@ -81,7 +81,7 @@ This repository contains two implementations of the same game:
 
 ## Play the Game
 * itch.io: https://unastaziabo.itch.io/volans-sort-puzzle-game
-* Google Play: (planned)
+* Google Play: Mobile version is under development
 
 ## License
 
