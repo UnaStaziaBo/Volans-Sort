@@ -2,7 +2,7 @@
 
 ## Visual Assets (Images)
 
-All visual assets in this project were generated using OpenAI GPT image generation tools.
+Visual assets in this project were generated using OpenAI GPT image generation tools.
 
 © 2026 UnaStaziaBo
 
@@ -18,6 +18,15 @@ You are NOT allowed to:
 - Use the images in other projects without explicit permission
 
 This does not restrict fair use, reviews, commentary, or transformative works.
+
+
+### Visual Assets (Images)
+
+- **Music Notes Icon**  
+  Author: Auraiwan Dechsom  
+  Source: Vecteezy  
+  Link: https://www.vecteezy.com/png/9268061-music-notes-icon  
+  License: Free License (Attribution Required)
 
 ---
 
