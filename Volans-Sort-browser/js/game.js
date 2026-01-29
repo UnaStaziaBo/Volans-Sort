@@ -11,10 +11,16 @@ const rulesOverlay = document.createElement("div");
 rulesOverlay.className = "rules-overlay";
 rulesOverlay.innerHTML = `
   <div class="card">
+    <button id="btn-sound-overlay" class="sound-btn-overlay" aria-label="Toggle sound" type="button">
+      <img src="resources/images/elements/sound.png" alt="Sound" />
+    </button>
+
     <div class="rules" id="rulesBoxOverlay"></div>
     <div class="hint"></div>
   </div>
 `;
+
+const soundBtnOverlay = rulesOverlay.querySelector("#btn-sound-overlay");
 const rulesBoxOverlay = rulesOverlay.querySelector("#rulesBoxOverlay");
 const rulesHint = rulesOverlay.querySelector(".hint");
 const buttons = {
@@ -22,6 +28,8 @@ const buttons = {
     dragon: document.getElementById("btn-dragon"),
     skip: document.getElementById("btn-skip"),
 };
+
+
 const SCENES = {
     intro1: { bodyClass: "bg-intro-1", music: "resources/audio/beginning.mp3" },
     start2: { bodyClass: "bg-start2", music: "resources/audio/beginning.mp3" },
@@ -445,6 +453,7 @@ class AudioManager {
         this._unlocked = false;
         this._pendingSrc = null;
         this._token = 0;
+        this.muted = false;
 
         const unlock = () => {
             this._unlocked = true;
@@ -454,12 +463,32 @@ class AudioManager {
             if (this._pendingSrc) {
                 const s = this._pendingSrc;
                 this._pendingSrc = null;
-                this.playLoop(s).catch(() => {});
+
+                if (!this.muted) {
+                    this.playLoop(s).catch(() => {});
+                }
             }
         };
 
         document.addEventListener("pointerdown", unlock, { once: true });
         document.addEventListener("keydown", unlock, { once: true });
+    }
+
+    setMuted(value) {
+        this.muted = value;
+
+        if (value) {
+            this._pendingSrc = null;
+        }
+
+        if (this.current) {
+            this.current.volume = value ? 0 : this.defaultVolume;
+        }
+    }
+
+    toggleMute() {
+        this.setMuted(!this.muted);
+        return this.muted;
     }
 
     // Avoid overlapping music on top of the previous one
@@ -499,7 +528,7 @@ class AudioManager {
             prev.src = "";
         }
 
-        if (myToken === this._token) {
+        if (myToken === this._token && !this.muted) {
             await this._fade(next, volume, this.fadeMs);
         }
     }
@@ -526,7 +555,49 @@ class AudioManager {
     }
 }
 
+// sound part
 const audio = new AudioManager({ defaultVolume: 0.5, fadeMs: 700 });
+const soundBtn = document.getElementById("btn-sound");
+const savedMute = localStorage.getItem("muted") === "true";
+audio.setMuted(savedMute);
+
+if (soundBtn) {
+    soundBtn.classList.toggle("muted", savedMute);
+
+    soundBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        const muted = audio.toggleMute();
+        soundBtn.classList.toggle("muted", muted);
+        localStorage.setItem("muted", muted);
+
+        showDragonPopup(muted ? "Sound off" : "Sound on");
+    });
+}
+
+if (soundBtnOverlay) {
+    soundBtnOverlay.classList.toggle("muted", savedMute);
+
+    soundBtnOverlay.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const muted = audio.toggleMute();
+
+        soundBtn?.classList.toggle("muted", muted);
+        soundBtnOverlay.classList.toggle("muted", muted);
+
+        localStorage.setItem("muted", muted);
+        showDragonPopup(muted ? "Sound off" : "Sound on");
+    });
+}
+
+soundBtnOverlay.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+});
+
+
 
 function setScene(sceneKey) {
     const scene = SCENES[sceneKey];
@@ -674,8 +745,6 @@ function fitBoardToViewport() {
 
     grid.style.transform = `scale(${k})`;
 }
-
-// ===============================================================
 
 rulesOverlay.addEventListener("click", async () => {
     if (!awaitingRules) return;
