@@ -354,3 +354,69 @@ class DragonE extends Dragon {
     }
 }
 //====================================================
+
+//================= Dragon B2 =========================
+// If all B are collected in exactly one column
+// freeze neighboring column for 15 moves
+class DragonB2 extends Dragon {
+    constructor() {
+        super("Dragon B2");
+        this.effectUsed = false;
+    }
+
+    specialDragonRule(field, moves) {
+        this.applyDragonEffect(field, moves);
+    }
+
+    getDemoBoard() {
+        return [
+            [" ", " ", " ", " ", "A", "E", " "],
+            ["B", " ", "D", " ", "C", "E", " "],
+            ["B", "C", "D", " ", "E", "E", "B"],
+            ["B", "C", "D", " ", "C", "D", "A"],
+            ["B", "C", "D", "A", "E", "A", "A"],
+        ];
+    }
+
+    applyDragonEffect(field, moves) {
+        if (this.effectUsed) return;
+
+        let columnB = -1;
+
+        // Find a column that has at least one B and contains only B/spaces
+        for (let col = 0; col < field.getColumnCount(); col++) {
+            let hasB = false;
+            let onlyB = true;
+
+            for (let row = 0; row < field.getRowCount(); row++) {
+                const cell = field.getCell(row, col);
+                if (cell === "B") hasB = true;
+                else if (cell !== " ") { onlyB = false; break; }
+            }
+
+            if (hasB && onlyB) { columnB = col; break; }
+        }
+
+        if (columnB === -1) return;
+
+        // Ensure there are no B in other columns
+        for (let col = 0; col < field.getColumnCount(); col++) {
+            if (col === columnB) continue;
+            for (let row = 0; row < field.getRowCount(); row++) {
+                if (field.getCell(row, col) === "B") return;
+            }
+        }
+
+        // Choose neighbor: right if exists, else left
+        const cols = field.getColumnCount();
+        let target = (columnB + 1 < cols) ? (columnB + 1) : (columnB - 1);
+        if (target < 0 || target >= cols) return;
+
+        // Freeze for 15 moves
+        field.freezeColumn(target, 15, moves);
+
+        this.effectUsed = true;
+        console.log(`Dragon B2 froze column ${target + 1} for 15 moves`);
+    }
+}
+//====================================================

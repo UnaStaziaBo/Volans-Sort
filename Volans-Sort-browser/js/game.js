@@ -78,7 +78,8 @@ const levels = [
     { id: 2, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonB(), rules: ['resources/rules/levels/level2.txt']},
     { id: 3, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonC(), rules: ['resources/rules/levels/level3.txt']},
     { id: 4, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonD(), rules: ['resources/rules/levels/level4.txt']},
-    { id: 5, rows: 5, columns: 8, maxMoves: 70, dragon: new DragonE(), rules: ['resources/rules/levels/level5.txt']},
+    { id: 5, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonB2(), rules: ['resources/rules/levels/level2_1.txt']},
+    { id: 6, rows: 5, columns: 8, maxMoves: 70, dragon: new DragonE(), rules: ['resources/rules/levels/level5.txt']},
 ];
 
 let awaitingRules = true;

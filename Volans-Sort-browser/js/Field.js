@@ -111,6 +111,10 @@ class Field {
                 const cellDiv = document.createElement("div");
                 cellDiv.className = "cell";
                 const val = this.field[r][c];
+                if (this.isColumnFrozen(c)) {
+                    cellDiv.classList.add("frozen-column");
+                }
+
                 cellDiv.innerHTML = "";
 
                 // Assigning names to letters
@@ -248,6 +252,27 @@ class Field {
         this.hooks.onHUDUpdate();
     }
 
+    freezeColumn(colIndex0, durationMoves, currentMoves) {
+        const until = currentMoves + durationMoves;
+        this._frozenUntil.set(colIndex0, until);
+        this.renderBoard();
+    }
+
+    isColumnFrozen(colIndex0) {
+        if (!this._frozenUntil) this._frozenUntil = new Map();
+
+        const until = this._frozenUntil.get(colIndex0);
+        if (until == null) return false;
+
+        const moves = this.hooks.getMoves();
+        if (moves >= until) {
+            this._frozenUntil.delete(colIndex0);
+            return false;
+        }
+        return true;
+    }
+
+
     initEvents() {
         this.container.addEventListener("click", this._handleClick);
     }
@@ -255,6 +280,7 @@ class Field {
     _handleClick(e) {
         if (this._isDragonDemo) {
             this._isDragonDemo = false;
+            this._frozenUntil = new Map();
             this.selectedCol = null;
             this.renderBoard();
             this.hooks.onHUDUpdate();
@@ -277,6 +303,15 @@ class Field {
         }
 
         const chosenCol = Number(cell.dataset.col) + 1;
+
+        const chosenColIndex0 = chosenCol - 1;
+        if (this.isColumnFrozen(chosenColIndex0)) {
+            if (typeof window.showDragonPopup === "function") {
+                window.showDragonPopup("Frozen!");
+            }
+            return;
+        }
+
         if (this.selectedCol === null) {
             this.selectedCol = chosenCol;
             this.renderBoard();

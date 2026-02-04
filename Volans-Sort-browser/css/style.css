@@ -16,6 +16,7 @@ html, body {
     gap: 12px;
 }
 
+
 .sound-btn {
     background: none;
     border: none;
@@ -23,9 +24,9 @@ html, body {
     cursor: pointer;
     display: flex;
     align-items: center;
-    position: relative;
-    z-index: 100000;
 }
+
+
 
 .sound-btn img {
     width: 22px;
@@ -242,7 +243,10 @@ body.bg-finish-fifth-5 {
     min-height: 100vh;
 }
 
-
+.frozen-column {
+    background: rgba(120, 200, 255, 0.18);
+    outline: 2px solid rgba(120, 200, 255, 0.7);
+}
 
 body.game-finished .levelCount,
 body.game-finished .movesCount {
