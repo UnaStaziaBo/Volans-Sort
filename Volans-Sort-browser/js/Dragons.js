@@ -420,3 +420,58 @@ class DragonB2 extends Dragon {
     }
 }
 //====================================================
+
+//================= Dragon Flip =========================
+// After every 5 moves, all columns reverse vertically
+// (top becomes bottom). Triggers once per 5-move block.
+class DragonFlip extends Dragon {
+    constructor() {
+        super("Dragon Flip");
+        this.lastFlipAtMove = 0;
+    }
+
+    specialDragonRule(field, moves) {
+        this.applyDragonEffect(field, moves);
+    }
+
+    getDemoBoard() {
+        return [
+            [" ", " ", " ", " ", "A", "E", " "],
+            ["B", " ", "D", " ", "C", "E", " "],
+            ["B", "C", "D", " ", "E", "E", "B"],
+            ["B", "C", "D", " ", "C", "D", "A"],
+            ["B", "C", "D", "A", "E", "A", "A"],
+        ];
+    }
+
+    applyDragonEffect(field, moves) {
+        // Flip on move 5,10,15,... once each time.
+        if (moves <= 0) return;
+
+        const shouldFlip = (moves % 5 === 0);
+        if (!shouldFlip) return;
+
+        if (this.lastFlipAtMove === moves) return;
+
+        this.flipAllColumns(field);
+        this.lastFlipAtMove = moves;
+
+        console.log(`Dragon Flip reversed all columns at move ${moves}`);
+    }
+
+    flipAllColumns(field) {
+        const rows = field.getRowCount();
+        const cols = field.getColumnCount();
+
+        // Reverse each column in-place by swapping symmetric rows
+        for (let col = 0; col < cols; col++) {
+            for (let top = 0, bottom = rows - 1; top < bottom; top++, bottom--) {
+                const a = field.getCell(top, col);
+                const b = field.getCell(bottom, col);
+                field.setCell(top, col, b);
+                field.setCell(bottom, col, a);
+            }
+        }
+    }
+}
+//========================================================
