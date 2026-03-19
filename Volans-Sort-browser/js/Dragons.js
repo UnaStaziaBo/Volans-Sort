@@ -475,3 +475,79 @@ class DragonFlip extends Dragon {
     }
 }
 //========================================================
+
+//================= Dragon C+ =========================
+// If all C are collected in exactly one column
+// transform all D letters into E
+class DragonC_Evolution extends Dragon {
+    constructor() {
+        super("Dragon C Evolution");
+        this.effectUsed = false;
+    }
+
+    specialDragonRule(field, moves) {
+        this.applyDragonEffect(field);
+    }
+
+    getDemoBoard() {
+        return [
+            [" ", " ", " ", " ", "A", "E", " "],
+            ["C", " ", "D", " ", "B", "E", " "],
+            ["C", "B", "D", " ", "E", "E", "B"],
+            ["C", "B", "D", " ", "C", "D", "A"],
+            ["C", "B", "D", "A", "E", "A", "A"],
+        ];
+    }
+
+    applyDragonEffect(field) {
+        if (this.effectUsed) return;
+
+        let columnC = -1;
+
+        for (let col = 0; col < field.getColumnCount(); col++) {
+            let hasC = false;
+            let onlyC = true;
+
+            for (let row = 0; row < field.getRowCount(); row++) {
+                const cell = field.getCell(row, col);
+                if (cell === "C") hasC = true;
+                else if (cell !== " ") { onlyC = false; break; }
+            }
+
+            if (hasC && onlyC) {
+                columnC = col;
+                break;
+            }
+        }
+
+        if (columnC === -1) return;
+
+        for (let col = 0; col < field.getColumnCount(); col++) {
+            if (col === columnC) continue;
+
+            for (let row = 0; row < field.getRowCount(); row++) {
+                if (field.getCell(row, col) === "C") return;
+            }
+        }
+
+        this.transformDToE(field);
+
+        this.effectUsed = true;
+        console.log("Dragon C transformed all D into E");
+    }
+
+    transformDToE(field) {
+        const rows = field.getRowCount();
+        const cols = field.getColumnCount();
+
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                if (field.getCell(row, col) === "D") {
+                    field.setCell(row, col, "E");
+                }
+            }
+        }
+    }
+}
+//=====================================================
+

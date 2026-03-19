@@ -80,7 +80,8 @@ const levels = [
     { id: 4, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonD(), rules: ['resources/rules/levels/level4.txt']},
     { id: 5, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonB2(), rules: ['resources/rules/levels/level2_1.txt']},
     { id: 6, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonFlip(), rules: ['resources/rules/levels/level6.txt']},
-    { id: 7, rows: 5, columns: 8, maxMoves: 70, dragon: new DragonE(), rules: ['resources/rules/levels/level5.txt']},
+    { id: 7, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonC_Evolution(), rules: ['resources/rules/levels/level7.txt']},
+    { id: 8, rows: 5, columns: 8, maxMoves: 70, dragon: new DragonE(), rules: ['resources/rules/levels/level5.txt']},
 ];
 
 let awaitingRules = true;
@@ -598,8 +599,6 @@ soundBtnOverlay.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     e.stopPropagation();
 });
-
-
 
 function setScene(sceneKey) {
     const scene = SCENES[sceneKey];
