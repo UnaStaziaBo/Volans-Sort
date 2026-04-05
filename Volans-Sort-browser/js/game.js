@@ -1,5 +1,5 @@
 const container = document.getElementById("game-container");
-const ui = {    // elements UI
+const ui = {
     moves: document.getElementById("moves"),
     score: document.getElementById("score"),
     maxMoves: document.getElementById("maxMoves"),
@@ -7,6 +7,7 @@ const ui = {    // elements UI
     rulesBox: document.getElementById("rulesBox"),
     pointsBox: document.getElementById("pointsBox"),
 };
+
 const rulesOverlay = document.createElement("div");
 rulesOverlay.className = "rules-overlay";
 rulesOverlay.innerHTML = `
@@ -23,65 +24,71 @@ rulesOverlay.innerHTML = `
 const soundBtnOverlay = rulesOverlay.querySelector("#btn-sound-overlay");
 const rulesBoxOverlay = rulesOverlay.querySelector("#rulesBoxOverlay");
 const rulesHint = rulesOverlay.querySelector(".hint");
+
 const buttons = {
     new: document.getElementById("btn-new"),
     dragon: document.getElementById("btn-dragon"),
     skip: document.getElementById("btn-skip"),
+    endless: document.getElementById("btn-endless"),
+    campaign: document.getElementById("btn-campaign"),
 };
-
 
 const SCENES = {
     intro1: { bodyClass: "bg-intro-1", music: "resources/audio/beginning.mp3" },
     start2: { bodyClass: "bg-start2", music: "resources/audio/beginning.mp3" },
     start3: { bodyClass: "bg-start3", music: "resources/audio/beginning.mp3" },
     start4: { bodyClass: "bg-start4", music: "resources/audio/battleStart.mp3" },
-    game:   { bodyClass: "bg-game",    music: "resources/audio/gameplay.mp3" },
+    game: { bodyClass: "bg-game", music: "resources/audio/gameplay.mp3" },
     finishBase: { bodyClass: "bg-finish-base", music: "resources/audio/ending.mp3" },
 };
+
 const stepSceneKeys = (prefix, steps) =>
-    Array.from({length: steps}, (_, i)=> `${prefix}_${i}`);
+    Array.from({ length: steps }, (_, i) => `${prefix}_${i}`);
+
 const FINISH_BRANCHES = {
     finishFirst: {
         rules: numberedRulesFiles("resources/rules/finish", "finish1", 6),
-        scenes: stepSceneKeys("finishFirst", 6)
+        scenes: stepSceneKeys("finishFirst", 6),
     },
-    finishSecond : {
+    finishSecond: {
         rules: numberedRulesFiles("resources/rules/finish", "finish2", 6),
-        scenes: stepSceneKeys("finishSecond", 6)
+        scenes: stepSceneKeys("finishSecond", 6),
     },
     finishThird: {
         rules: numberedRulesFiles("resources/rules/finish", "finish3", 6),
-        scenes: stepSceneKeys("finishThird", 6)
+        scenes: stepSceneKeys("finishThird", 6),
     },
-    finishFourth : {
+    finishFourth: {
         rules: numberedRulesFiles("resources/rules/finish", "finish4", 6),
-        scenes: stepSceneKeys("finishFourth", 6)
+        scenes: stepSceneKeys("finishFourth", 6),
     },
     finishFifth: {
         rules: numberedRulesFiles("resources/rules/finish", "finish5", 6),
-        scenes: stepSceneKeys("finishFifth", 6)
+        scenes: stepSceneKeys("finishFifth", 6),
     },
 };
+
 const START2_SEQUENCE = {
     startScene: "start2",
     steps: [
-        {rule: "resources/rules/start/start2.txt"},
-        {rule: "resources/rules/start/start2_2.txt"},
-        {scene:"start3", rule: "resources/rules/start/start3.txt" },
-        {rule: "resources/rules/start/start3_1.txt"},
-        {scene:"start4", rule: "resources/rules/start/start4.txt" },
-        {rule: "resources/rules/start/start4_1.txt"},
-    ]
-}
+        { rule: "resources/rules/start/start2.txt" },
+        { rule: "resources/rules/start/start2_2.txt" },
+        { scene: "start3", rule: "resources/rules/start/start3.txt" },
+        { rule: "resources/rules/start/start3_1.txt" },
+        { scene: "start4", rule: "resources/rules/start/start4.txt" },
+        { rule: "resources/rules/start/start4_1.txt" },
+    ],
+};
+
 const levels = [
-    { id: 1, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonA(), rules: ["resources/rules/levels/level1.txt", "resources/rules/levels/level1_1.txt"]},
-    { id: 2, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonB(), rules: ['resources/rules/levels/level2.txt']},
-    { id: 3, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonC(), rules: ['resources/rules/levels/level3.txt']},
-    { id: 4, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonD(), rules: ['resources/rules/levels/level4.txt']},
-    { id: 5, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonB2(), rules: ['resources/rules/levels/level2_1.txt']},
-    { id: 6, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonFlip(), rules: ['resources/rules/levels/level6.txt']},
-    { id: 7, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonC_Evolution(), rules: ['resources/rules/levels/level7.txt']},
-    { id: 8, rows: 5, columns: 8, maxMoves: 70, dragon: new DragonE(), rules: ['resources/rules/levels/level5.txt']},
+    { id: 1, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonA(), rules: ["resources/rules/levels/level1.txt", "resources/rules/levels/level1_1.txt"] },
+    { id: 2, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonB(), rules: ["resources/rules/levels/level2.txt"] },
+    { id: 3, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonC(), rules: ["resources/rules/levels/level3.txt"] },
+    { id: 4, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonD(), rules: ["resources/rules/levels/level4.txt"] },
+    { id: 5, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonB2(), rules: ["resources/rules/levels/level2_1.txt"] },
+    { id: 6, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonFlip(), rules: ["resources/rules/levels/level6.txt"] },
+    { id: 7, rows: 5, columns: 7, maxMoves: 50, dragon: new DragonC_Evolution(), rules: ["resources/rules/levels/level7.txt"] },
+    { id: 8, rows: 5, columns: 8, maxMoves: 70, dragon: new DragonE(), rules: ["resources/rules/levels/level5.txt"] },
 ];
 
 let awaitingRules = true;
@@ -98,9 +105,14 @@ let completedColumnIndexes = new Set();
 let field = null;
 let activeSequence = null;
 
+// ===== Endless mode =====
+let gameMode = "campaign"; // "campaign" | "endless"
+let endlessLevelNumber = 1;
+let currentGeneratedLevel = null;
+
 document.body.appendChild(rulesOverlay);
 
-// // ================== All game scenes =========================
+// ================== All game scenes =========================
 addStepScenes(SCENES, {
     prefix: "finishFirst",
     bodyPrefix: "bg-finish-first",
@@ -108,6 +120,7 @@ addStepScenes(SCENES, {
     musicDefault: "resources/audio/ending.mp3",
     musicLast: "resources/audio/happyEnding.mp3",
 });
+
 addStepScenes(SCENES, {
     prefix: "finishSecond",
     bodyPrefix: "bg-finish-second",
@@ -115,6 +128,7 @@ addStepScenes(SCENES, {
     musicDefault: "resources/audio/ending.mp3",
     musicLast: "resources/audio/happyEnding.mp3",
 });
+
 addStepScenes(SCENES, {
     prefix: "finishThird",
     bodyPrefix: "bg-finish-third",
@@ -122,6 +136,7 @@ addStepScenes(SCENES, {
     musicDefault: "resources/audio/ending.mp3",
     musicLast: "resources/audio/happyEnding.mp3",
 });
+
 addStepScenes(SCENES, {
     prefix: "finishFourth",
     bodyPrefix: "bg-finish-fourth",
@@ -129,6 +144,7 @@ addStepScenes(SCENES, {
     musicDefault: "resources/audio/ending.mp3",
     musicLast: "resources/audio/happyEnding.mp3",
 });
+
 addStepScenes(SCENES, {
     prefix: "finishFifth",
     bodyPrefix: "bg-finish-fifth",
@@ -136,52 +152,205 @@ addStepScenes(SCENES, {
     musicDefault: "resources/audio/ending.mp3",
     musicLast: "resources/audio/happyEnding.mp3",
 });
-// ===============================================================
+// ============================================================
+
+// ================== Endless mode helpers =====================
+function createEndlessLevel(levelNumber) {
+    const allDragonClasses = [
+        DragonA,
+        DragonB,
+        DragonC,
+        DragonD,
+        DragonB2,
+        DragonFlip,
+        DragonC_Evolution,
+        DragonE,
+    ];
+
+    let availableDragonClasses = [];
+
+    if (levelNumber <= 2) {
+        availableDragonClasses = [DragonA, DragonB];
+    } else if (levelNumber <= 4) {
+        availableDragonClasses = [DragonA, DragonB, DragonC];
+    } else if (levelNumber <= 6) {
+        availableDragonClasses = [DragonA, DragonB, DragonC, DragonD];
+    } else if (levelNumber <= 9) {
+        availableDragonClasses = [DragonA, DragonB, DragonC, DragonD, DragonB2];
+    } else if (levelNumber <= 12) {
+        availableDragonClasses = [DragonA, DragonB, DragonC, DragonD, DragonB2, DragonFlip];
+    } else {
+        availableDragonClasses = allDragonClasses;
+    }
+
+    const DragonClass =
+        availableDragonClasses[Math.floor(Math.random() * availableDragonClasses.length)];
+
+    const rows = levelNumber >= 10 ? 6 : 5;
+    const columns = Math.min(10, 7 + Math.floor((levelNumber - 1) / 3));
+    const maxMoves = 45 + levelNumber * 3 + (columns - 7) * 4 + (rows - 5) * 5;
+
+    return {
+        id: levelNumber,
+        rows,
+        columns,
+        maxMoves,
+        dragon: new DragonClass(),
+        rules: [],
+        endless: true,
+    };
+}
+
+function getCurrentLevelData() {
+    if (gameMode === "endless") {
+        return currentGeneratedLevel;
+    }
+
+    return levels[currentLevelIndex];
+}
+
+function saveBestEndlessScore(score) {
+    const best = Number(localStorage.getItem("bestEndlessScore") || 0);
+
+    if (score > best) {
+        localStorage.setItem("bestEndlessScore", String(score));
+    }
+}
+
+function getBestEndlessScore() {
+    return Number(localStorage.getItem("bestEndlessScore") || 0);
+}
+
+function startCampaignMode() {
+    gameMode = "campaign";
+    newGame("campaign");
+}
+
+function startEndlessMode() {
+    gameMode = "endless";
+    newGame("endless");
+}
+
+function startEndlessLevel() {
+    moves = 0;
+    completedColumnIndexes.clear();
+
+    currentGeneratedLevel = createEndlessLevel(endlessLevelNumber);
+    const level = currentGeneratedLevel;
+
+    container.innerHTML = "";
+    completedColumnIndexes.clear();
+
+    awaitingRules = false;
+    resetHint();
+    rulesQueue = [];
+    rulesStep = 0;
+    document.body.classList.remove("awaiting-rules");
+
+    if (field) field.destroy();
+
+    field = new Field(container, level, {
+        getMoves: () => moves,
+        setMoves: (v) => (moves = v),
+        getTotalScore: () => totalScore,
+        setTotalScore: (v) => (totalScore = v),
+        completedColumnIndexes,
+        dragon: level.dragon,
+        onHUDUpdate: () => {
+            renderHUD();
+        },
+
+        onSolved: () => {
+            totalScore += 500 + endlessLevelNumber * 20;
+            completedColumnIndexes.clear();
+            renderHUD();
+
+            endlessLevelNumber += 1;
+            startEndlessLevel();
+        },
+
+        onFailed: () => {
+            saveBestEndlessScore(totalScore);
+
+            if (typeof window.showLosePopup === "function") {
+                window.showLosePopup(
+                    `Endless over! Score: ${totalScore} | Best: ${getBestEndlessScore()}`
+                );
+            }
+
+            setTimeout(() => {
+                newGame("endless");
+            }, 1400);
+        },
+    });
+
+    renderHUD();
+}
+// ============================================================
 
 // ================== Main Gameplay ===========================
 async function startIntro() {
     document.body.classList.remove("end-screen");
 
-    await runSequence(makeSequence({
-        mode: "intro",
-        startScene: "intro1",
-        steps: [{rule: "resources/rules/start/start1.txt"}],
-        hintNext: "Tap/click anywhere to continue",
-        hintLast: "Tap/click anywhere to start",
-        onDone: async () => {
-            await runStart2();
-        },
-    }));
+    await runSequence(
+        makeSequence({
+            mode: "intro",
+            startScene: "intro1",
+            steps: [{ rule: "resources/rules/start/start1.txt" }],
+            hintNext: "Tap/click anywhere to continue",
+            hintLast: "Tap/click anywhere to start",
+            onDone: async () => {
+                await runStart2();
+            },
+        })
+    );
 }
 
 async function runStart2() {
-    await runSequence(makeSequence({
-        mode: "start2",
-        startScene: START2_SEQUENCE.startScene,
-        steps: START2_SEQUENCE.steps,
-        hintNext: "Tap/click anywhere to continue",
-        hintLast: "Tap/click anywhere to start",
-        onDone: async () => {
-            overlayMode = "rules";
-            awaitingRules = false;
-            document.body.classList.remove("awaiting-rules");
+    await runSequence(
+        makeSequence({
+            mode: "start2",
+            startScene: START2_SEQUENCE.startScene,
+            steps: START2_SEQUENCE.steps,
+            hintNext: "Tap/click anywhere to continue",
+            hintLast: "Tap/click anywhere to start",
+            onDone: async () => {
+                overlayMode = "rules";
+                awaitingRules = false;
+                document.body.classList.remove("awaiting-rules");
 
-            setScene("game");
-            newGame();
-        },
-    }));
+                setScene("game");
+                newGame();
+            },
+        })
+    );
 }
 
-function newGame() {
+function newGame(mode = gameMode) {
     overlayMode = "rules";
-    currentLevelIndex = 0;
+    gameMode = mode;
     totalScore = 0;
     moves = 0;
     completedColumnIndexes = new Set();
+    currentGeneratedLevel = null;
+
+    if (gameMode === "endless") {
+        endlessLevelNumber = 1;
+        setScene("game");
+        startEndlessLevel();
+        return;
+    }
+
+    currentLevelIndex = 0;
     startLevel(currentLevelIndex);
 }
 
 function startLevel(index) {
+    if (gameMode === "endless") {
+        startEndlessLevel();
+        return;
+    }
+
     moves = 0;
     completedColumnIndexes.clear();
 
@@ -218,9 +387,7 @@ function startLevel(index) {
             renderHUD();
         },
 
-        // Called when level is solved
         onSolved: () => {
-            //+500 for solving the level
             totalScore += 500;
             completedColumnIndexes.clear();
             renderHUD();
@@ -228,12 +395,12 @@ function startLevel(index) {
             startLevel(currentLevelIndex + 1);
         },
 
-        // Called when moves are full
         onFailed: () => {
             if (typeof window.showLosePopup === "function") {
                 window.showLosePopup("Moves are over!");
             }
-            setTimeout(() => newGame(), 1100);
+
+            setTimeout(() => newGame("campaign"), 1100);
         },
     });
 
@@ -248,6 +415,19 @@ function skipLevel() {
         field._isDragonDemo = false;
         field.selectedCol = null;
         field.renderBoard();
+    }
+
+    if (gameMode === "endless") {
+        field.destroy();
+        field = null;
+
+        endlessLevelNumber += 1;
+        moves = 0;
+        completedColumnIndexes.clear();
+
+        renderHUD();
+        startEndlessLevel();
+        return;
     }
 
     const nextIndex = currentLevelIndex + 1;
@@ -274,8 +454,7 @@ function skipLevel() {
 }
 
 function activateDragon() {
-    // Show demo board for current dragon
-    const level = levels[currentLevelIndex];
+    const level = getCurrentLevelData();
     if (!level?.dragon || !field) return;
 
     const demo = level.dragon.getDemoBoard?.();
@@ -287,48 +466,55 @@ async function showFinishScreen() {
         field.destroy();
         field = null;
     }
+
     container.innerHTML = "";
 
-    await runSequence(makeSequence({
-        mode: "finish",
-        startScene: "finishBase",
-        steps: [{ rule: "resources/rules/finish/finish.txt" }],
-        hintNext: "Tap/click anywhere to continue",
-        hintLast: "Tap/click anywhere to continue",
-        onDone: async () => {
-            await showFinalPointsToast(totalScore, 2000);
+    await runSequence(
+        makeSequence({
+            mode: "finish",
+            startScene: "finishBase",
+            steps: [{ rule: "resources/rules/finish/finish.txt" }],
+            hintNext: "Tap/click anywhere to continue",
+            hintLast: "Tap/click anywhere to continue",
+            onDone: async () => {
+                await showFinalPointsToast(totalScore, 2000);
 
-            const branchKey = getFinishBranch(totalScore);
-            const branch = FINISH_BRANCHES[branchKey] ?? FINISH_BRANCHES.finishFirst;
+                const branchKey = getFinishBranch(totalScore);
+                const branch = FINISH_BRANCHES[branchKey] ?? FINISH_BRANCHES.finishFirst;
 
-            await runSequence(makeSequence({
-                mode: "finish",
-                startScene: branch.scenes[0],
-                steps: branch.rules.map((rule, i) => ({
-                    rule,
-                    scene: branch.scenes[i],
-                })),
-                hintNext: "Tap/click anywhere to continue",
-                hintLast: "Tap/click anywhere to start again",
-                onDone: async () => {
-                    await runRestart();
-                },
-            }));
-        },
-    }));
+                await runSequence(
+                    makeSequence({
+                        mode: "finish",
+                        startScene: branch.scenes[0],
+                        steps: branch.rules.map((rule, i) => ({
+                            rule,
+                            scene: branch.scenes[i],
+                        })),
+                        hintNext: "Tap/click anywhere to continue",
+                        hintLast: "Tap/click anywhere to start again",
+                        onDone: async () => {
+                            await runRestart();
+                        },
+                    })
+                );
+            },
+        })
+    );
 }
 
 async function runRestart() {
-    await runSequence(makeSequence({
-        mode: "restart",
-        startScene: "intro1",
-        steps: [{ rule: "resources/rules/restart.txt" }],
-        hintNext: "Tap/click anywhere to continue",
-        hintLast: "Tap/click anywhere to start",
-        onDone: async () => {
-            await startIntro();
-        },
-    }));
+    await runSequence(
+        makeSequence({
+            mode: "restart",
+            startScene: "intro1",
+            steps: [{ rule: "resources/rules/restart.txt" }],
+            hintNext: "Tap/click anywhere to continue",
+            hintLast: "Tap/click anywhere to start",
+            onDone: async () => {
+                await startIntro();
+            },
+        })
+    );
 }
 
 function startAfterRules() {
@@ -350,18 +536,25 @@ function getFinishBranch(score) {
     return "finishFifth";
 }
 
-if (buttons.new) buttons.new.addEventListener("click", newGame);
+if (buttons.new) buttons.new.addEventListener("click", () => newGame(gameMode));
 if (buttons.skip) buttons.skip.addEventListener("click", skipLevel);
 if (buttons.dragon) buttons.dragon.addEventListener("click", activateDragon);
-// ===============================================================
+if (buttons.endless) buttons.endless.addEventListener("click", startEndlessMode);
+if (buttons.campaign) buttons.campaign.addEventListener("click", startCampaignMode);
+// ============================================================
 
-// ================== Rules processing ===========================
-function numberedRulesFiles(basePath, name, count, {startAt0 = false} = {}){
+// ================== Rules processing =========================
+function numberedRulesFiles(basePath, name, count, { startAt0 = false } = {}) {
     const arr = [];
+
     for (let i = 0; i < count; i++) {
-        if (i === 0 && !startAt0) arr.push(`${basePath}/${name}.txt`);
-        else arr.push(`${basePath}/${name}_${startAt0 ? i : i}.txt`);
+        if (i === 0 && !startAt0) {
+            arr.push(`${basePath}/${name}.txt`);
+        } else {
+            arr.push(`${basePath}/${name}_${startAt0 ? i : i}.txt`);
+        }
     }
+
     return arr;
 }
 
@@ -393,18 +586,18 @@ async function renderRules() {
     rulesBoxOverlay.textContent = text;
     resetHint();
 
-    const isLastCard = (rulesStep === rulesQueue.length - 1);
+    const isLastCard = rulesStep === rulesQueue.length - 1;
     const textHint = isLastCard
         ? "Tap/click anywhere to start"
         : "Tap/click anywhere to continue";
 
     typeHintText(textHint);
 }
-// ===============================================================
+// ============================================================
 
-// ==================== Sequence part ============================
-function makeSequence ({mode, startScene, steps, hintNext, hintLast, onDone }) {
-    return { mode, startScene, steps, hintNext, hintLast, onDone, i: 0};
+// ==================== Sequence part ==========================
+function makeSequence({ mode, startScene, steps, hintNext, hintLast, onDone }) {
+    return { mode, startScene, steps, hintNext, hintLast, onDone, i: 0 };
 }
 
 async function runSequence(seq) {
@@ -419,7 +612,7 @@ async function runSequence(seq) {
     activeSequence = seq;
 }
 
-async function renderSequenceStep(seq){
+async function renderSequenceStep(seq) {
     const step = seq.steps[seq.i];
 
     if (step.scene) setScene(step.scene);
@@ -427,15 +620,16 @@ async function renderSequenceStep(seq){
     rulesBoxOverlay.textContent = "Loading...";
     rulesBoxOverlay.textContent = await loadRuleText(step.rule);
     resetHint();
+
     const isLast = seq.i === seq.steps.length - 1;
-    typeHintText(isLast? seq.hintLast : seq.hintNext);
+    typeHintText(isLast ? seq.hintLast : seq.hintNext);
 }
 
-async function nextSequenceStep(){
+async function nextSequenceStep() {
     const seq = activeSequence;
     if (!seq || !awaitingRules) return;
 
-    if (seq.i < seq.steps.length - 1){
+    if (seq.i < seq.steps.length - 1) {
         seq.i += 1;
         await renderSequenceStep(seq);
         return;
@@ -444,9 +638,9 @@ async function nextSequenceStep(){
     activeSequence = null;
     await seq.onDone?.();
 }
-// ===============================================================
+// ============================================================
 
-// ==================== Scene display ============================
+// ==================== Scene display ==========================
 class AudioManager {
     constructor({ defaultVolume = 0.35, fadeMs = 700 } = {}) {
         this.defaultVolume = defaultVolume;
@@ -464,11 +658,11 @@ class AudioManager {
             document.removeEventListener("keydown", unlock);
 
             if (this._pendingSrc) {
-                const s = this._pendingSrc;
+                const pendingSrc = this._pendingSrc;
                 this._pendingSrc = null;
 
                 if (!this.muted) {
-                    this.playLoop(s).catch(() => {});
+                    this.playLoop(pendingSrc).catch(() => {});
                 }
             }
         };
@@ -494,7 +688,6 @@ class AudioManager {
         return this.muted;
     }
 
-    // Avoid overlapping music on top of the previous one
     async playLoop(src, { volume = this.defaultVolume } = {}) {
         if (!src) return;
         if (this.currentSrc === src && this.current && !this.current.paused) return;
@@ -507,10 +700,12 @@ class AudioManager {
         const myToken = ++this._token;
         const prev = this.current;
         const fadePrevPromise = prev ? this._fade(prev, 0, this.fadeMs) : Promise.resolve();
+
         const next = new Audio(src);
         next.loop = true;
         next.preload = "auto";
         next.volume = 0;
+
         try {
             await next.play();
         } catch (e) {
@@ -522,10 +717,12 @@ class AudioManager {
             next.src = "";
             return;
         }
+
         this.current = next;
         this.currentSrc = src;
 
         await fadePrevPromise;
+
         if (prev) {
             prev.pause();
             prev.src = "";
@@ -544,21 +741,26 @@ class AudioManager {
             audioEl.volume = target;
             return Promise.resolve();
         }
+
         const t0 = performance.now();
 
         return new Promise((resolve) => {
             const tick = (t) => {
                 const k = Math.min(1, (t - t0) / ms);
                 audioEl.volume = start + delta * k;
-                if (k < 1) requestAnimationFrame(tick);
-                else resolve();
+
+                if (k < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    resolve();
+                }
             };
+
             requestAnimationFrame(tick);
         });
     }
 }
 
-// sound part
 const audio = new AudioManager({ defaultVolume: 0.5, fadeMs: 700 });
 const soundBtn = document.getElementById("btn-sound");
 const savedMute = localStorage.getItem("muted") === "true";
@@ -604,33 +806,37 @@ function setScene(sceneKey) {
     const scene = SCENES[sceneKey];
     if (!scene) return;
 
-    // background
-    const allBgClasses = Object.values(SCENES).map(s => s.bodyClass);
+    const allBgClasses = Object.values(SCENES).map((s) => s.bodyClass);
     document.body.classList.remove(...allBgClasses);
     document.body.classList.add(scene.bodyClass);
 
-    // music
     audio.playLoop(scene.music).catch(() => {});
     currentSceneKey = sceneKey;
 }
 
-function addStepScenes(target, { prefix, bodyPrefix, steps, musicLast, musicDefault}) {
+function addStepScenes(target, { prefix, bodyPrefix, steps, musicLast, musicDefault }) {
     for (let i = 0; i < steps; i++) {
         target[`${prefix}_${i}`] = {
             bodyClass: `${bodyPrefix}-${i}`,
-            music: (musicLast != null && i === steps - 1) ? musicLast : musicDefault,
+            music: musicLast != null && i === steps - 1 ? musicLast : musicDefault,
         };
     }
 }
 
 function renderHUD() {
-    const level = levels[currentLevelIndex];
+    const level = getCurrentLevelData();
+    if (!level) return;
 
     if (ui.moves) ui.moves.textContent = String(moves);
     if (ui.score) ui.score.textContent = String(totalScore);
-
     if (ui.maxMoves) ui.maxMoves.textContent = String(level.maxMoves);
-    if (ui.currentLevel) ui.currentLevel.textContent = String(level.id);
+
+    if (ui.currentLevel) {
+        ui.currentLevel.textContent =
+            gameMode === "endless"
+                ? `∞ ${endlessLevelNumber}`
+                : String(level.id);
+    }
 
     if (ui.rulesBox) ui.rulesBox.style.display = "none";
 
@@ -638,9 +844,9 @@ function renderHUD() {
         ui.pointsBox.style.display = awaitingRules ? "none" : (moves > 0 ? "block" : "none");
     }
 }
-// ===============================================================
+// ============================================================
 
-// ==================== Hints and Popup part =====================
+// ==================== Hints and Popup part ==================
 function typeHintText(text, delayMs = 5000, speedMs = 40) {
     if (!rulesHint) return;
 
@@ -651,10 +857,14 @@ function typeHintText(text, delayMs = 5000, speedMs = 40) {
 
     hintDelayTimer = setTimeout(() => {
         let i = 0;
+
         hintTypingTimer = setInterval(() => {
             rulesHint.textContent += text[i] ?? "";
             i++;
-            if (i >= text.length) clearInterval(hintTypingTimer);
+
+            if (i >= text.length) {
+                clearInterval(hintTypingTimer);
+            }
         }, speedMs);
     }, delayMs);
 }
@@ -669,8 +879,9 @@ function resetHint() {
     if (rulesHint) rulesHint.textContent = "";
 }
 
-function showDragonPopup(text = "РОР") {
+function showDragonPopup(text = "POP") {
     let el = document.getElementById("dragonToast");
+
     if (!el) {
         el = document.createElement("div");
         el.id = "dragonToast";
@@ -680,7 +891,6 @@ function showDragonPopup(text = "РОР") {
 
     el.textContent = text;
 
-    // restart animation
     el.classList.remove("show");
     void el.offsetWidth;
     el.classList.add("show");
@@ -688,6 +898,7 @@ function showDragonPopup(text = "РОР") {
 
 function showLosePopup(text = "Moves are over!") {
     let el = document.getElementById("loseToast");
+
     if (!el) {
         el = document.createElement("div");
         el.id = "loseToast";
@@ -697,7 +908,6 @@ function showLosePopup(text = "Moves are over!") {
 
     el.textContent = text;
 
-    // restart animation
     el.classList.remove("show");
     void el.offsetWidth;
     el.classList.add("show");
@@ -706,6 +916,7 @@ function showLosePopup(text = "Moves are over!") {
 function showFinalPointsToast(points, ms = 3000) {
     return new Promise((resolve) => {
         let el = document.getElementById("finalPointsToast");
+
         if (!el) {
             el = document.createElement("div");
             el.id = "finalPointsToast";
@@ -715,7 +926,6 @@ function showFinalPointsToast(points, ms = 3000) {
 
         el.textContent = `Total points: ${points}`;
 
-        // restart show animation
         el.classList.remove("hide");
         el.classList.remove("show");
         void el.offsetWidth;
@@ -732,16 +942,16 @@ function showFinalPointsToast(points, ms = 3000) {
 }
 
 function fitBoardToViewport() {
-    const container = document.querySelector(".game-container");
+    const gameContainer = document.querySelector(".game-container");
     const grid = document.querySelector(".game-grid");
-    if (!container || !grid) return;
+
+    if (!gameContainer || !grid) return;
 
     grid.style.transform = "scale(1)";
 
     const padding = 16;
-    const available = container.clientWidth - padding;
+    const available = gameContainer.clientWidth - padding;
     const needed = grid.scrollWidth;
-
     const k = Math.min(1.15, available / needed);
 
     grid.style.transform = `scale(${k})`;
@@ -750,17 +960,17 @@ function fitBoardToViewport() {
 rulesOverlay.addEventListener("click", async () => {
     if (!awaitingRules) return;
 
-    if(activeSequence) {
+    if (activeSequence) {
         await nextSequenceStep();
         return;
     }
 
     if (rulesStep < rulesQueue.length - 1) {
         rulesStep += 1;
-
         await renderRules();
         return;
     }
+
     startAfterRules();
 });
 
@@ -774,5 +984,7 @@ window.addEventListener("resize", () => requestAnimationFrame(fitBoardToViewport
 window.showLosePopup = showLosePopup;
 window.newGame = newGame;
 window.showDragonPopup = showDragonPopup;
+window.startEndlessMode = startEndlessMode;
+window.startCampaignMode = startCampaignMode;
 
-void startIntro();
+startEndlessMode();
