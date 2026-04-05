@@ -21,9 +21,45 @@ rulesOverlay.innerHTML = `
   </div>
 `;
 
+const modeMenuOverlay = document.createElement("div");
+modeMenuOverlay.className = "mode-menu-overlay";
+modeMenuOverlay.innerHTML = `
+  <div class="mode-menu-card">
+    <button id="btn-sound-menu" class="sound-btn-overlay" aria-label="Toggle sound" type="button">
+      <img src="resources/images/elements/sound.png" alt="Sound" />
+    </button>
+
+    <div class="mode-menu-ornament"></div>
+
+    <div class="mode-menu-title">Choose Your Path</div>
+    <div class="mode-menu-subtitle">Two adventures are waiting for you</div>
+
+    <div class="mode-menu-buttons">
+      <button id="btn-mode-campaign" class="mode-menu-btn story" type="button">
+        <span class="mode-menu-btn-kicker">Main Journey</span>
+        <span class="mode-menu-btn-title">Story Mode</span>
+        <span class="mode-menu-btn-text">Travel through the full tale, discover dragon powers, and reach one of the endings.</span>
+      </button>
+
+      <button id="btn-mode-endless" class="mode-menu-btn endless" type="button">
+        <span class="mode-menu-btn-kicker">For Brave Hearts</span>
+        <span class="mode-menu-btn-title">Endless Mode</span>
+        <span class="mode-menu-btn-text">Enter an endless challenge with growing difficulty and chase your best score.</span>
+      </button>
+    </div>
+
+    <div class="mode-menu-best" id="modeMenuBestScore"></div>
+  </div>
+`;
+
 const soundBtnOverlay = rulesOverlay.querySelector("#btn-sound-overlay");
+const soundBtnMenu = modeMenuOverlay.querySelector("#btn-sound-menu");
 const rulesBoxOverlay = rulesOverlay.querySelector("#rulesBoxOverlay");
 const rulesHint = rulesOverlay.querySelector(".hint");
+
+const btnModeCampaign = modeMenuOverlay.querySelector("#btn-mode-campaign");
+const btnModeEndless = modeMenuOverlay.querySelector("#btn-mode-endless");
+const modeMenuBestScore = modeMenuOverlay.querySelector("#modeMenuBestScore");
 
 const buttons = {
     new: document.getElementById("btn-new"),
@@ -106,11 +142,12 @@ let field = null;
 let activeSequence = null;
 
 // ===== Endless mode =====
-let gameMode = "campaign"; // "campaign" | "endless"
+let gameMode = "campaign";
 let endlessLevelNumber = 1;
 let currentGeneratedLevel = null;
 
 document.body.appendChild(rulesOverlay);
+document.body.appendChild(modeMenuOverlay);
 
 // ================== All game scenes =========================
 addStepScenes(SCENES, {
@@ -223,11 +260,13 @@ function getBestEndlessScore() {
 
 function startCampaignMode() {
     gameMode = "campaign";
+    showDragonPopup("Story Mode");
     newGame("campaign");
 }
 
 function startEndlessMode() {
     gameMode = "endless";
+    showDragonPopup("Endless Mode");
     newGame("endless");
 }
 
@@ -246,6 +285,7 @@ function startEndlessLevel() {
     rulesQueue = [];
     rulesStep = 0;
     document.body.classList.remove("awaiting-rules");
+    document.body.classList.remove("mode-menu-open");
 
     if (field) field.destroy();
 
@@ -288,9 +328,43 @@ function startEndlessLevel() {
 }
 // ============================================================
 
+// ================== Mode menu ================================
+function showModeMenu() {
+    return new Promise((resolve) => {
+        document.body.classList.remove("awaiting-rules");
+        document.body.classList.add("mode-menu-open");
+        overlayMode = "menu";
+
+        if (modeMenuBestScore) {
+            modeMenuBestScore.textContent = `Best endless score: ${getBestEndlessScore()}`;
+        }
+
+        const onCampaign = () => {
+            cleanup();
+            resolve("campaign");
+        };
+
+        const onEndless = () => {
+            cleanup();
+            resolve("endless");
+        };
+
+        function cleanup() {
+            btnModeCampaign?.removeEventListener("click", onCampaign);
+            btnModeEndless?.removeEventListener("click", onEndless);
+            document.body.classList.remove("mode-menu-open");
+        }
+
+        btnModeCampaign?.addEventListener("click", onCampaign);
+        btnModeEndless?.addEventListener("click", onEndless);
+    });
+}
+// ============================================================
+
 // ================== Main Gameplay ===========================
 async function startIntro() {
     document.body.classList.remove("end-screen");
+    document.body.classList.remove("mode-menu-open");
 
     await runSequence(
         makeSequence({
@@ -313,14 +387,21 @@ async function runStart2() {
             startScene: START2_SEQUENCE.startScene,
             steps: START2_SEQUENCE.steps,
             hintNext: "Tap/click anywhere to continue",
-            hintLast: "Tap/click anywhere to start",
+            hintLast: "Tap/click anywhere to choose mode",
             onDone: async () => {
-                overlayMode = "rules";
+                overlayMode = "menu";
                 awaitingRules = false;
                 document.body.classList.remove("awaiting-rules");
 
                 setScene("game");
-                newGame();
+
+                const selectedMode = await showModeMenu();
+
+                if (selectedMode === "endless") {
+                    startEndlessMode();
+                } else {
+                    startCampaignMode();
+                }
             },
         })
     );
@@ -333,6 +414,7 @@ function newGame(mode = gameMode) {
     moves = 0;
     completedColumnIndexes = new Set();
     currentGeneratedLevel = null;
+    document.body.classList.remove("mode-menu-open");
 
     if (gameMode === "endless") {
         endlessLevelNumber = 1;
@@ -373,6 +455,7 @@ function startLevel(index) {
 
     rulesStep = 0;
     document.body.classList.add("awaiting-rules");
+    document.body.classList.remove("mode-menu-open");
 
     if (field) field.destroy();
 
@@ -604,6 +687,7 @@ async function runSequence(seq) {
     overlayMode = seq.mode;
     awaitingRules = true;
     document.body.classList.add("awaiting-rules");
+    document.body.classList.remove("mode-menu-open");
 
     if (seq.startScene) setScene(seq.startScene);
 
@@ -791,13 +875,37 @@ if (soundBtnOverlay) {
 
         soundBtn?.classList.toggle("muted", muted);
         soundBtnOverlay.classList.toggle("muted", muted);
+        soundBtnMenu?.classList.toggle("muted", muted);
 
         localStorage.setItem("muted", muted);
         showDragonPopup(muted ? "Sound off" : "Sound on");
     });
 }
 
-soundBtnOverlay.addEventListener("pointerdown", (e) => {
+if (soundBtnMenu) {
+    soundBtnMenu.classList.toggle("muted", savedMute);
+
+    soundBtnMenu.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const muted = audio.toggleMute();
+
+        soundBtn?.classList.toggle("muted", muted);
+        soundBtnOverlay?.classList.toggle("muted", muted);
+        soundBtnMenu.classList.toggle("muted", muted);
+
+        localStorage.setItem("muted", muted);
+        showDragonPopup(muted ? "Sound off" : "Sound on");
+    });
+}
+
+soundBtnOverlay?.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+});
+
+soundBtnMenu?.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     e.stopPropagation();
 });
@@ -987,4 +1095,4 @@ window.showDragonPopup = showDragonPopup;
 window.startEndlessMode = startEndlessMode;
 window.startCampaignMode = startCampaignMode;
 
-startEndlessMode();
+void startIntro();
